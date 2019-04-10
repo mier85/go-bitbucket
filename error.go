@@ -1,8 +1,6 @@
 package bitbucket
 
 import (
-	"errors"
-
 	"github.com/mitchellh/mapstructure"
 )
 
