@@ -11,6 +11,10 @@ type BitbucketError struct {
 	Fields  map[string][]string
 }
 
+func (b BitbucketError) Error() string {
+	return b.Message
+}
+
 func DecodeError(e map[string]interface{}) error {
 	var bitbucketError BitbucketError
 	err := mapstructure.Decode(e["error"], &bitbucketError)
@@ -18,5 +22,5 @@ func DecodeError(e map[string]interface{}) error {
 		return err
 	}
 
-	return errors.New(bitbucketError.Message)
+	return bitbucketError
 }
