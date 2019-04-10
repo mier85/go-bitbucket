@@ -273,7 +273,16 @@ func (c *Client) doRequest(req *http.Request, emptyResponse bool) (interface{}, 
 	}
 
 	if (resp.StatusCode != http.StatusOK) && (resp.StatusCode != http.StatusCreated) {
-		return nil, fmt.Errorf(resp.Status)
+		if resp.StatusCode != http.StatusBadRequest {
+			return nil, fmt.Errorf(resp.Status)
+		}
+		var body map[string]interface{}
+		err := json.NewDecoder(resp.Body).Decode(&body)
+		if nil != err {
+			return nil, fmt.Errorf(resp.Status)
+		}
+
+		return nil, DecodeError(body)
 	}
 
 	if emptyResponse {
